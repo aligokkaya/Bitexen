@@ -1,0 +1,169 @@
+{%extends "menu.html"%}
+
+{%block header%}
+Grafik Raporları
+{%endblock%}
+
+{%block body%}
+
+<script type="text/javascript">
+  var value=0;
+    function change()
+    {
+    
+    
+    value=value+1;
+    document.getElementById("myButton1").value="YÜKLENİYOR LÜTFEN BEKLEYİNİZ...";
+    if (value==2)
+    {
+      var bt = document.getElementById('myButton1');
+      bt.disabled = true;   
+    }
+    
+    }
+    
+    </script>
+<div class="container-fluid">
+  <!-- Example row of columns -->
+  <div class="row">
+      <div class="container-fluid" id="data-btc">
+
+      </div>
+  </div>
+</div>
+<br>
+<br>
+<br>
+
+
+
+<div class="container-fluid">
+  <!-- Example row of columns -->
+  <div class="row">
+      <div class="container-fluid" id="data-eth">
+
+      </div>
+  </div>
+</div>
+
+
+<script>
+  var chartbtc;
+  var charteth;
+
+  function requestData()
+  {
+      // Ajax call to get the Data from Flask
+      var requests = $.get('/data');
+
+      var tm = requests.done(function (result)
+      {
+          // BTC
+          var seriesbtc = chartbtc.series[0],
+              shiftbtc = seriesbtc.data.length > 10;
+
+          // ETH
+          var serieseth = charteth.series[0],
+              shifteth = serieseth.data.length > 10;
+
+         
+          var data1 = [];
+          data1.push(result[0]);
+          data1.push(result[1]);
+
+          var data2 = [];
+          data2.push(result[0]);
+          data2.push(result[2]);
+
+
+          chartbtc.series[0].addPoint(data1, true, shiftbtc);
+          charteth.series[0].addPoint(data2, true, shifteth);
+
+
+          // call it again after one second
+          setTimeout(requestData, 5000);
+
+      });
+  }
+
+  $(document).ready(function()
+  {
+      // --------------Chart 1 ----------------------------
+      chartbtc = new Highcharts.Chart({
+          chart:
+              {
+              renderTo: 'data-btc',
+              defaultSeriesType: 'area',
+              events: {
+                  load: requestData
+                      }
+              },
+          title:
+              {
+              text: 'BTCTRY'
+              },
+              xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 1500,
+                maxZoom: 20 * 1
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: 'Value',
+                    margin: 80
+                },
+                min: 650000,
+
+            },
+
+            
+          series: [{
+              color : '#c23d23',
+              lineColor: '#303030',
+              name: 'BTCTRY',
+              data: []
+          }]
+      });
+      // --------------Chart 1 Ends - -----------------
+
+      charteth = new Highcharts.Chart({
+          chart:
+              {
+                  renderTo: 'data-eth',
+                  defaultSeriesType: 'area',
+                  events: {
+                      load: requestData
+                  }
+              },
+          title:
+              {
+                  text: 'ETHTRY'
+              },
+              xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 1500,
+                maxZoom: 20 * 1
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: 'Value',
+                    margin: 80
+                        },
+                    min: 50000,
+                     },
+          series: [{
+              lineColor: '#1d82b8',
+              name: 'ETHTRY',
+              data: []
+          }]
+      });
+
+
+  });
+</script>
+
+{%endblock%}

@@ -1,0 +1,119 @@
+{%extends "menu.html"%}
+
+{%block header%}
+Ücretler
+<script type="text/javascript">
+  function change()
+  {
+  document.getElementById("myButton1").value="YÜKLENİYOR LÜTFEN BEKLEYİNİZ...";
+  }
+  </script>
+{%endblock%}
+
+
+
+{%block body%}
+
+<section class="section is-main-section">
+  <div class="notification is-info">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          
+          <div>
+            
+            
+            <div>
+              
+              <form method="POST" action="/ucretler" name="form" onsubmit="return validateForm()">
+                <select name="para" id="para" class="minimal">
+                  {% for i in range (para | length) %}
+                  <option value={{para[i]}}>{{para[i]}}</option>
+                  {%endfor%}
+                 
+                </select>
+                 
+          </div>
+          </div>
+        </div>
+      </div>
+      <input name="button" class="button is-primary" onclick="change()" type="submit" value="GÖRÜNTÜLE" id="myButton1">
+
+      <!-- <button type="submit" name="button" class="button is-primary" value="value">GÖRÜNTÜLE</button> -->
+    </div>
+    </form>
+  </div>
+  </section>
+
+  <div class="card has-table">
+    <header class="card-header">
+      <p class="card-header-title">
+        <span class="icon"><i class="mdi mdi-ballot"></i></span>
+        Tablo  
+      </p>
+      <a href="ucretler" class="card-header-icon">
+        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+      </a>
+    </header>
+    <div class="card-content">
+      <div class="b-table has-pagination">
+        <div class="table-wrapper has-mobile-cards">
+          <table id="data" class="table is-fullwidth is-striped is-hoverable is-fullwidth">
+           
+            <tr>
+                
+              
+              <th>Para Tipi</th>
+              <th>bid</th>
+              <th>ask </th>
+              <th>last_price</th>
+              <th>last_size</th>
+              <th>volume_24h </th>
+              <th>change_24h</th>
+              <th>low_24h</th>
+              <th>high_24h </th>
+              <th>avg_24h</th>
+              <th>timestamp</th>
+            </tr>
+            
+            <tbody>
+             
+        
+        
+              <tr>
+                {% if data | length > 1 %}
+                  <td>{{ data['market']['market_code'] }}</td>
+                  <td>{{ data['bid']}}</td>
+                  <td>{{ data['ask']}}</td>
+                  <td>{{ data['last_price']}}</td>
+                  <td>{{ data['last_size']}}</td>
+                  <td>{{ data['volume_24h']}}</td>
+                  <td>{{ data['change_24h']}}</td>
+                  <td>{{ data['low_24h']}}</td>
+                  <td>{{ data['high_24h']}}</td>
+                  <td>{{ data['avg_24h']}}</td>
+                  <td>{{ date }}</td>
+                 <td class="is-actions-cell">
+                {% else %}
+                  <td class="is-actions-cell"></td>
+                {% endif %}
+                </td>
+                 
+                
+                 
+                  
+                  
+              </tr>
+        
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  
+</section>
+
+
+
+
+{%endblock%}

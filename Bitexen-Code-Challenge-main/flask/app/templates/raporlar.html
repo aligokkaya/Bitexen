@@ -1,0 +1,101 @@
+{%extends "menu.html"%}
+
+{%block header%}
+Raporlar
+<script type="text/javascript">
+  function change()
+  {
+  document.getElementById("myButton1").value="YÜKLENİYOR LÜTFEN BEKLEYİNİZ...";
+  }
+  </script>
+{%endblock%}
+
+
+
+{%block body%}
+
+<section class="section is-main-section">
+  <div class="notification is-info">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          
+          <div>
+            
+            
+            <div>
+              
+              <form method="POST" action="/raporlar" name="form" onsubmit="return validateForm()">
+                <select name="para" id="para" class="minimal">
+                  <option value=BTCTRY>BTCTRY</option>
+                </select>
+
+
+                <select name="when" id="when" class="minimal">
+                    <option value=daily>daily</option>
+                    <option value=weekly>weekly</option>
+                    <option value=monthly>monthly</option>
+                </select>
+                 
+          </div>
+          </div>
+        </div>
+      </div>
+      <input name="button" class="button is-primary" onclick="change()" type="submit" value="GÖRÜNTÜLE" id="myButton1">
+
+      <!-- <button type="submit" name="button" class="button is-primary" value="value">GÖRÜNTÜLE</button> -->
+    </div>
+    </form>
+  </div>
+  </section>
+
+  <div class="card has-table">
+    <header class="card-header">
+      <p class="card-header-title">
+        <span class="icon"><i class="mdi mdi-ballot"></i></span>
+        Tablo  
+      </p>
+      <a href="ucretler" class="card-header-icon">
+        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+      </a>
+    </header>
+    <div class="card-content">
+      <div class="b-table has-pagination">
+        <div class="table-wrapper has-mobile-cards">
+          <table id="data" class="table is-fullwidth is-striped is-hoverable is-fullwidth">
+           
+            <tr> 
+              <th>Minimum price</th>
+              <th>Maximum price </th>
+              <th>Average price</th>
+              <th>Total volume</th>
+              <th>Last Price</th>
+            </tr>
+            
+            <tbody>
+              {% for i in range (myresult | length) %}
+              <tr>
+              
+                
+                <td>{{myresult[i][1]}}</td>
+                <td>{{myresult[i][2]}}</td>
+                <td>{{myresult[i][3]}}</td>
+                <td>{{myresult[i][4]}}</td>
+                <td>{{myresult[i][5]}}</td>
+
+
+
+                
+                <td class="is-actions-cell"></td>
+                </td>  
+              </tr>
+         
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  
+</section>
+{%endblock%}
