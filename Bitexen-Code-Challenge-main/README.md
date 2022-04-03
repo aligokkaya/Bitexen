@@ -31,27 +31,19 @@ are ready, notify by email and give access to us for the code review process.
 Please make your repository private . ​  
 ● We are waiting for you to return with an estimation for the task after receiving  
 email. It depends on you. But we expect you to keep up with the estimation.  
+  
+  
+  
+  
+  
+  
+  
+for flask   
+docker build ./ --tag bitexen  
+docker run --restart always -d --network=host --name bitexendeploy bitexen  
 
-
-
-
-
-
-
-for flask 
-
-docker build ./ --tag bitexen
-docker run --restart always -d --network=host --name bitexendeploy bitexen
-
-
-
-
-
-
-
-
-for FASTAPI
-
-docker build ./ --tag bitexenfastapi
-docker run --restart always -d --network=host --name fastdeploy bitexenfastapi
+  
+for FASTAPI  
+docker build ./ --tag bitexenfastapi  
+docker run --restart always -d --network=host --name fastdeploy bitexenfastapi  
 
