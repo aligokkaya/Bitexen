@@ -8,11 +8,11 @@ Taskta kullanılan API den yararlınarak (#https://docs.bitexen.com/?python) Bas
 
 
 flask kurulum 
+
 ````
-```
 docker build ./ --tag bitexen  
 docker run --restart always -d --network=host --name bitexendeploy bitexen 
-```
+
 ````
 
 
@@ -38,7 +38,7 @@ Günlük,HAftalık ve aylık verilerini
  /v1/bitexen/<string:data>/<string:day>/  
 )
 çekebilirsiniz. 
-
+ 
 <string:data> kısmında haftalık mı aylık mı olduğunu örneğin 
 /v1/bitexen/month/<string:day>
 /v1/bitexen/weekly/<string:day>
@@ -62,9 +62,9 @@ Birtane kullanıcı kayıt olması için post methodu vardır.
 
 data ={
 
-    'mail':'test@gmail.com',
-    'name_surname':'test',
-    'password':'test'
+    "mail":"test@gmail.com",
+    "name_surname":"test",
+    "password":"test"
 
 }
 
@@ -72,10 +72,9 @@ data ={
 FASTAPI kurulum 
 
 ````
-```
 docker-compose -f system.yml -p system up --build -d
+
 ````
-```
 Kurulumdansonra  http://localhost:5000/dosc sayfasından FastAPI nin sunmuş olduğu döküman sayfasına gidebilirsiniz.
 
 Her 5 sn de bitexen apisini dinleyen code yapısı mevcuttur.
@@ -112,15 +111,13 @@ sorularıyla yanıt alabilirsiniz.
 Birtane kullanıcı kayıt olması için post methodu vardır.
 
 data ={
-
-    'mail':'test@gmail.com',
-    'name_surname':'test',
-    'password':'test'
-
+    "mail":"test@gmail.com",
+    "name_surname':'test",
+    "password":"test"
 }
 
 data verisini alarak veritanabına yeni kullanıcı ekler.
 
 Unit-Test kod kısmı FastAPI klasörünün içinde unit-test.py dosyasıdır.
 
-
+ 
