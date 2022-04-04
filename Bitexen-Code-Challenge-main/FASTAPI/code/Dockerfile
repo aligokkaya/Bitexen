@@ -1,18 +1,11 @@
-FROM python:3.6-slim
+FROM python:3.8-slim-buster
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt requirements.txt
 
-RUN set -eux; \
-        apt-get update; \
-        apt-get install -y --no-install-recommends gcc; \
-	apt-get install -y  python3-dev; \
-	apt-get install -y libevent-dev; \
-        apt-get -y  autoremove gcc; \
-        rm -rf /var/lib/apt/lists/*
+RUN pip3 install -r requirements.txt
 
-COPY ./ /usr/src/app
+COPY . .
 
-CMD ["python","/usr/src/app/code.py"]
+CMD ["python3","-u", "main.py"]

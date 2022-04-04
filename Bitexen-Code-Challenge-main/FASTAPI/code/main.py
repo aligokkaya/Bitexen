@@ -9,8 +9,6 @@ db_save=[]
 daily=[]
 min_week,max_week,average_week,total_volume_week,last_price_week=0.0,0.0,0.0,0.0,0.0
 min_monthly,max_monthly,average_monthly,total_volume_monthly,last_price_monthly=0.0,0.0,0.0,0.0,0.0
-buyers_array=[]
-sellers_array=[]
 sayac=0
 
 def db_con():
@@ -22,12 +20,8 @@ def db_con():
 
     return mydb
 
-
-def data():
-    global min_week,max_week,average_week,total_volume_week,last_price_week
-    global min_monthly,max_monthly,average_monthly,total_volume_monthly,last_price_monthly
-    global sayac
-    time.sleep(1)
+while True:
+    print('burdayim')
     try:
         x = requests.get("https://www.bitexen.com/api/v1/order_book/BTCTRY/")
         data = json.loads(x.text)
@@ -107,8 +101,4 @@ def data():
             min_monthly,max_monthly,average_monthly,total_volume_monthly,last_price_monthly=0.0,0.0,0.0,0.0,0.0
     except Exception as inst:
        print(inst)
-
-while True:
     time.sleep(5)
-    print('burdayim')
-    data()
