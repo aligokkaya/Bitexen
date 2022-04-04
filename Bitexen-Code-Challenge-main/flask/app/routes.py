@@ -8,7 +8,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from flask_restful import Resource, Api
 import json
-
+from math import *
 
 db_save=[]
 daily=[]
@@ -74,6 +74,11 @@ def data():
                 mydb.commit()
                 daily.append(db_save[0])
 
+        # print(timestamp)
+        years_month=str(timestamp)[0:7]
+        week=str(timestamp)[9:11]
+        week=floor(int(week)/7)
+ 
         if len(daily) % 7 == 0 and len(daily) > 0:
             for i in range(len(daily)):
                 min_week=(min_week+daily[i]['min'])
@@ -82,10 +87,11 @@ def data():
                 total_volume_week=(total_volume_week+daily[i]['volume_24h']) 
                 last_price_week=(last_price_week+daily[i]['last_price'])
 
+            
             mydb=db_con()
             mycursor = mydb.cursor()
             sql = "INSERT INTO weekly (min, max,avarage_price,total_volume,last_price,datetime) VALUES (%s, %s,%s, %s,%s, %s)"
-            val = ((float(min_week/7)) , (float(max_week/7)),(float(average_week/7)),(float(total_volume_week/7)),(float(last_price_week/7)),(timestamp))
+            val = ((float(min_week/len(daily))) , (float(max_week/len(daily))),(float(average_week/len(daily))),(float(total_volume_week/len(daily))),(float(last_price_week/len(daily))),(str(years_month)+""+str(week)))
             mycursor.execute(sql, val)
             mydb.commit()
             min_week,max_week,average_week,total_volume_week,last_price_week=0.0,0.0,0.0,0.0,0.0
@@ -101,7 +107,7 @@ def data():
             mydb=db_con()
             mycursor = mydb.cursor()
             sql = "INSERT INTO monthly (min, max,avarage_price,total_volume,last_price,datetime) VALUES (%s, %s,%s, %s,%s, %s)"
-            val = ((float(min_monthly/30)) , (float(max_monthly/30)),(float(average_monthly/30)),(float(total_volume_monthly/30)),(float(last_price_monthly/30)),(timestamp))
+            val = ((float(min_monthly/len(daily))) , (float(max_monthly/len(daily))),(float(average_monthly/len(daily))),(float(total_volume_monthly/len(daily))),(float(last_price_monthly/len(daily))),(str(years_month)))
             mycursor.execute(sql, val)
             mydb.commit()
             min_monthly,max_monthly,average_monthly,total_volume_monthly,last_price_monthly=0.0,0.0,0.0,0.0,0.0
@@ -109,7 +115,7 @@ def data():
        print(inst)
         
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(data, 'interval', seconds=10)
+sched.add_job(data, 'interval', seconds=5)
 sched.start()
 
 def login_required(f):
@@ -233,33 +239,60 @@ def buysell():
 
 api = Api(app)
 
-def db_get(data):
-
-    mydb=db_con()
-    mycursor = mydb.cursor()
-    mycursor.execute("SELECT * FROM "+str(data)+"")
-    if data=='daily':
-        myresult = mycursor.fetchall()
-    else:
+def db_get(data,day):
+    if day != 'a':
+        mydb=db_con()
+        mycursor = mydb.cursor()
+        mycursor.execute("select*from "+str(data)+" WHERE datetime = '"+str(day)+"' ")
+        # "select*from "+str(data)+" WHERE datetime = '"+str(day)+"' "
         myresult = mycursor.fetchone()
-    return myresult
-
-
+        
+        return myresult
+    else:
+        mydb=db_con()
+        mycursor = mydb.cursor()
+        mycursor.execute("SELECT * FROM "+str(data)+"")
+        myresult = mycursor.fetchall()
+        return myresult
+class Bitexen_Day(Resource):
+    def get(self):
+        myresult=db_get('daily','a')
+        return jsonify({'daily':myresult})
 
 class Bitexen(Resource):
-    def get(self,data):
+    def get(self,data,day):
         self.data=data
-
+        self.day=day
         if self.data=='daily':
-            myresult=db_get(self.data)
+            myresult=db_get(self.data,'a')
+            
             return jsonify({str(self.data):myresult})
         elif self.data=='weekly':
-            myresult=db_get(self.data)
-            return jsonify({str(self.data):myresult})
+            myresult=db_get(self.data,self.day)
+            responce={
+                'min_price':myresult[1],
+                'max_price':myresult[2],
+                'avarage_price':myresult[3],
+                'total_volume':myresult[4],
+                'years':str(day)[0:4],
+                'month':str(day)[5:7],
+                'week':str(day)[8:]
+
+            }
+            return jsonify({str(self.data):responce})
            
         elif self.data=='monthly':
-            myresult=db_get(self.data)
-            return jsonify({str(self.data):myresult})
+            myresult=db_get(self.data,self.day)
+            responce={
+                'min_price':myresult[1],
+                'max_price':myresult[2],
+                'avarage_price':myresult[3],
+                'total_volume':myresult[4],
+                'years':str(day)[0:4],
+                'month':str(day)[5:7]
+
+            }
+            return jsonify({str(self.data):responce})
         else:
             print('b')
             return jsonify({'message': 'Wrong Adress /v1/bitexen/'+self.data+'.'})
@@ -275,11 +308,11 @@ class Register(Resource):
             val = (str(data['name-surname']), str(data['mail']),str(data['password']))
             mycursor.execute(sql, val)
             mydb.commit()
-            return make_response(jsonify({'status': 'ok'}), 200)
+            return make_response(jsonify({'status': 'success'}), 200)
         else :
             return make_response(jsonify({'status': 'username , mail and password cannot be empty'}), 400)
 
-
-api.add_resource(Bitexen, '/v1/bitexen/<string:data>/')
+api.add_resource(Bitexen_Day, '/v1/bitexen/daily/')
+api.add_resource(Bitexen, '/v1/bitexen/<string:data>/<string:day>/')
 api.add_resource(Register, '/challange/register/')
 

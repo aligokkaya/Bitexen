@@ -1,0 +1,21 @@
+version: '2.3'
+services:
+  get_req:
+    build: 
+      context: ./code
+      dockerfile: Dockerfile
+    image: get_req
+    container_name: bitexen_get
+    restart: always
+    network_mode: "host"
+    
+
+  fastapi:
+    build:
+      context: ./restapi
+      dockerfile: Dockerfile
+    image: fastapi
+    container_name: bitexen_fastapi
+    restart: always
+    network_mode: "host"
+    
