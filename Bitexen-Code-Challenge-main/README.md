@@ -8,8 +8,13 @@ Taskta kullanılan API den yararlınarak (#https://docs.bitexen.com/?python) Bas
 
 
 flask kurulum 
-'docker build ./ --tag bitexen  
-docker run --restart always -d --network=host --name bitexendeploy bitexen  '
+````
+```
+docker build ./ --tag bitexen  
+docker run --restart always -d --network=host --name bitexendeploy bitexen 
+```
+````
+
 
 Web Girişi:
 mail:bitexen_challenge@gmail.com
@@ -66,9 +71,11 @@ data ={
 
 FASTAPI kurulum 
 
-
-'docker-compose -f system.yml -p system up --build -d  '
-
+````
+```
+docker-compose -f system.yml -p system up --build -d
+````
+```
 Kurulumdansonra  http://localhost:5000/dosc sayfasından FastAPI nin sunmuş olduğu döküman sayfasına gidebilirsiniz.
 
 Her 5 sn de bitexen apisini dinleyen code yapısı mevcuttur.
